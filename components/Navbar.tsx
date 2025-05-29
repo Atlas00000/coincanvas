@@ -6,7 +6,7 @@ import Link from "next/link"
 import { useTheme } from "next-themes"
 import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "@/components/dashboard/ThemeToggle"
-import { Home, BarChart3, Wallet, Settings, Menu, X } from "lucide-react"
+import { Home, BarChart3, Wallet, Settings, Menu, X, Activity, Crown } from "lucide-react"
 
 export const Navbar = () => {
   const [mounted, setMounted] = useState(false)
@@ -23,8 +23,10 @@ export const Navbar = () => {
 
   const navItems = [
     { name: "Home", href: "/", icon: Home },
+    { name: "Market", href: "/market", icon: Activity },
     { name: "Analytics", href: "/analytics", icon: BarChart3 },
     { name: "Portfolio", href: "/portfolio", icon: Wallet },
+    { name: "Elite", href: "/elite", icon: Crown },
     { name: "Settings", href: "/settings", icon: Settings },
   ]
 

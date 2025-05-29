@@ -9,6 +9,15 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
+  experimental: {
+    appDir: true,
+  },
+  async redirects() {
+    return []
+  },
+  async rewrites() {
+    return []
+  }
 }
 
 export default nextConfig

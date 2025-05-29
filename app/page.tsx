@@ -29,9 +29,12 @@ import {
   PieChart,
   LogIn,
   UserPlus,
+  Target,
+  Share,
 } from "lucide-react"
 import { useTheme } from "next-themes"
 import Link from "next/link"
+import { AnimatePresence } from "framer-motion"
 
 // Enhanced floating particles component
 const FloatingParticles = () => {
@@ -294,119 +297,617 @@ const AdvancedChart = () => {
   )
 }
 
-// Enhanced market sentiment widget
-const MarketSentiment = () => {
-  const [sentiment] = useState(72)
-  const [isHovered, setIsHovered] = useState(false)
+// Enhanced Premium Analytics Section
+const PremiumAnalytics = () => {
+  const [selectedTimeframe, setSelectedTimeframe] = useState("24h")
+  const [selectedMetric, setSelectedMetric] = useState("volume")
+
+  const metrics = [
+    { id: "volume", label: "Trading Volume", value: "$847.3M", change: "+24.7%", positive: true },
+    { id: "trades", label: "Total Trades", value: "12,458", change: "+18.2%", positive: true },
+    { id: "users", label: "Active Users", value: "8,923", change: "+12.5%", positive: true },
+  ]
 
   return (
-    <motion.div
-      whileHover={{ scale: 1.02, y: -8 }}
-      onHoverStart={() => setIsHovered(true)}
-      onHoverEnd={() => setIsHovered(false)}
-      className="group"
-    >
-      <Card className="bg-card/50 backdrop-blur-xl border-border shadow-2xl overflow-hidden relative">
-        <motion.div
-          animate={{ opacity: isHovered ? 1 : 0 }}
-          className="absolute inset-0 bg-gradient-to-br from-green-500/10 to-amber-500/10"
-        />
-        <CardHeader className="relative z-10">
+    <Card className="bg-card/50 backdrop-blur-xl border-border shadow-2xl overflow-hidden group relative">
+      <motion.div
+        className="absolute inset-0 bg-gradient-to-br from-amber-500/5 to-yellow-500/5"
+        initial={{ opacity: 0 }}
+        whileHover={{ opacity: 1 }}
+        transition={{ duration: 0.3 }}
+      />
+      <CardHeader className="relative z-10">
+        <div className="flex items-center justify-between">
           <CardTitle className="flex items-center text-foreground">
-            <motion.div
-              animate={{ scale: isHovered ? 1.2 : 1, rotate: isHovered ? 180 : 0 }}
-              transition={{ duration: 0.5 }}
-            >
-              <Activity className="w-5 h-5 mr-2 text-amber-500" />
-            </motion.div>
-            Market Sentiment
-            <motion.div animate={{ scale: [1, 1.1, 1] }} transition={{ duration: 3, repeat: Number.POSITIVE_INFINITY }}>
-              <Badge className="ml-2 bg-green-500/20 text-green-400 border-green-500/30">BULLISH</Badge>
-            </motion.div>
+            <Activity className="w-5 h-5 mr-2 text-amber-500" />
+            Premium Analytics
+            <Badge className="ml-2 bg-gradient-to-r from-amber-500/20 to-yellow-500/20 text-amber-600 dark:text-amber-400 border-amber-500/30">
+              LIVE
+            </Badge>
           </CardTitle>
-        </CardHeader>
-        <CardContent className="relative z-10">
-          <div className="relative w-32 h-32 mx-auto mb-4">
-            <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
-              <circle
-                cx="50"
-                cy="50"
-                r="40"
-                stroke="currentColor"
-                strokeWidth="8"
-                fill="none"
-                className="text-muted opacity-20"
-              />
-              <motion.circle
-                cx="50"
-                cy="50"
-                r="40"
-                stroke="url(#sentimentGradient)"
-                strokeWidth="8"
-                fill="none"
-                strokeLinecap="round"
-                initial={{ pathLength: 0 }}
-                animate={{ pathLength: sentiment / 100 }}
-                transition={{ duration: 2.5, ease: "easeOut" }}
-                style={{
-                  strokeDasharray: "251.2",
-                  strokeDashoffset: "251.2",
-                  filter: "drop-shadow(0 0 8px rgb(34, 197, 94))",
-                }}
-              />
-              <defs>
-                <linearGradient id="sentimentGradient">
-                  <stop offset="0%" stopColor="rgb(34, 197, 94)" />
-                  <stop offset="100%" stopColor="rgb(245, 158, 11)" />
-                </linearGradient>
-              </defs>
-            </svg>
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="text-center">
-                <motion.div
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  transition={{ delay: 1.5, type: "spring", bounce: 0.5 }}
-                  className="text-2xl font-bold text-foreground"
-                >
-                  {sentiment}%
-                </motion.div>
-                <div className="text-xs text-green-400 font-semibold">Bullish</div>
-              </div>
-            </div>
-          </div>
-          <div className="space-y-3">
-            {[
-              { label: "Fear & Greed", value: "Greed", color: "green" },
-              { label: "Social Volume", value: "High", color: "amber" },
-              { label: "Market Cap", value: "$2.1T", color: "blue" },
-            ].map((item, index) => (
-              <motion.div
-                key={item.label}
-                initial={{ x: -20, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                transition={{ delay: 2.5 + index * 0.15 }}
-                whileHover={{ x: 5, scale: 1.02 }}
-                className="flex justify-between text-sm p-3 bg-muted/20 rounded-lg border border-border/30 cursor-pointer"
+          <div className="flex space-x-2">
+            {["24h", "7d", "30d"].map((t) => (
+              <Button
+                key={t}
+                variant={selectedTimeframe === t ? "default" : "outline"}
+                size="sm"
+                onClick={() => setSelectedTimeframe(t)}
               >
-                <span className="text-muted-foreground">{item.label}</span>
-                <span
-                  className={`font-semibold ${
-                    item.color === "green"
-                      ? "text-green-400"
-                      : item.color === "amber"
-                        ? "text-amber-400"
-                        : "text-blue-400"
-                  }`}
-                >
-                  {item.value}
-                </span>
-              </motion.div>
+                {t}
+              </Button>
             ))}
           </div>
-        </CardContent>
-      </Card>
-    </motion.div>
+        </div>
+      </CardHeader>
+      <CardContent className="space-y-6 relative z-10">
+        <div className="grid grid-cols-3 gap-4">
+          {metrics.map((metric) => (
+            <motion.div
+              key={metric.id}
+              whileHover={{ scale: 1.05 }}
+              className={`p-4 rounded-lg cursor-pointer transition-all duration-300 ${
+                selectedMetric === metric.id ? "bg-amber-500/10" : "bg-muted/50"
+              }`}
+              onClick={() => setSelectedMetric(metric.id)}
+            >
+              <div className="text-sm text-muted-foreground mb-1">{metric.label}</div>
+              <div className="text-2xl font-bold text-foreground">{metric.value}</div>
+              <div className={`text-sm ${metric.positive ? "text-green-400" : "text-red-400"}`}>
+                {metric.change}
+              </div>
+            </motion.div>
+          ))}
+        </div>
+
+        <div className="h-64 bg-muted/30 rounded-lg p-4">
+          <svg className="w-full h-full" viewBox="0 0 100 50" preserveAspectRatio="none">
+            <path
+              d="M0 50 L10 45 L20 48 L30 40 L40 42 L50 35 L60 38 L70 32 L80 34 L90 30 L100 25"
+              fill="none"
+              stroke="rgb(245, 158, 11)"
+              strokeWidth="2"
+            />
+          </svg>
+        </div>
+
+        <div className="grid grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <div className="text-sm font-medium">Top Trading Pairs</div>
+            {[
+              { pair: "BTC/USDT", volume: "$245.2M", change: "+5.2%" },
+              { pair: "ETH/USDT", volume: "$189.7M", change: "+3.8%" },
+              { pair: "SOL/USDT", volume: "$98.4M", change: "+7.1%" },
+            ].map((pair) => (
+              <div key={pair.pair} className="flex justify-between items-center text-sm">
+                <span className="text-muted-foreground">{pair.pair}</span>
+                <div className="text-right">
+                  <div className="font-medium">{pair.volume}</div>
+                  <div className="text-green-400">{pair.change}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="space-y-2">
+            <div className="text-sm font-medium">Market Distribution</div>
+            <div className="h-24 relative">
+              <svg className="w-full h-full" viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="40" fill="none" stroke="currentColor" strokeWidth="8" className="text-muted" />
+                <circle
+                  cx="50"
+                  cy="50"
+                  r="40"
+                  fill="none"
+                  stroke="rgb(245, 158, 11)"
+                  strokeWidth="8"
+                  strokeDasharray="251.2"
+                  strokeDashoffset="62.8"
+                  className="transform -rotate-90 origin-center"
+                />
+                <text x="50" y="50" textAnchor="middle" dominantBaseline="middle" className="text-sm font-medium">
+                  75%
+                </text>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  )
+}
+
+// Enhanced Market Sentiment Section
+const MarketSentiment = () => {
+  const [selectedTimeframe, setSelectedTimeframe] = useState("24h")
+  const [showDetails, setShowDetails] = useState(false)
+
+  const sentimentData = {
+    overall: 65,
+    fearGreedIndex: 72,
+    socialMetrics: {
+      twitter: { sentiment: 68, volume: 125000 },
+      reddit: { sentiment: 62, volume: 45000 },
+      telegram: { sentiment: 71, volume: 89000 },
+    },
+    marketMood: "Greed",
+    trends: [
+      { name: "DeFi", sentiment: 75, change: 5.2 },
+      { name: "NFT", sentiment: 68, change: -2.1 },
+      { name: "Layer 2", sentiment: 82, change: 8.4 },
+    ],
+  }
+
+  return (
+    <Card className="bg-card/50 backdrop-blur-xl border-border shadow-2xl">
+      <CardHeader>
+        <div className="flex items-center justify-between">
+          <CardTitle className="flex items-center text-foreground">
+            <Zap className="w-5 h-5 mr-2 text-amber-500" />
+            Market Sentiment
+            <Badge className="ml-2 bg-gradient-to-r from-amber-500/20 to-yellow-500/20 text-amber-600 dark:text-amber-400 border-amber-500/30">
+              LIVE
+            </Badge>
+          </CardTitle>
+          <div className="flex space-x-2">
+            {["24h", "7d", "30d"].map((t) => (
+              <Button
+                key={t}
+                variant={selectedTimeframe === t ? "default" : "outline"}
+                size="sm"
+                onClick={() => setSelectedTimeframe(t)}
+              >
+                {t}
+              </Button>
+            ))}
+          </div>
+        </div>
+      </CardHeader>
+      <CardContent>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="space-y-6">
+            <div className="relative h-48">
+              <svg className="w-full h-full" viewBox="0 0 100 100">
+                <circle
+                  cx="50"
+                  cy="50"
+                  r="40"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="8"
+                  className="text-muted"
+                />
+                <circle
+                  cx="50"
+                  cy="50"
+                  r="40"
+                  fill="none"
+                  stroke="url(#sentimentGradient)"
+                  strokeWidth="8"
+                  strokeDasharray={`${sentimentData.overall * 2.51} 251.2`}
+                  className="transform -rotate-90 origin-center"
+                />
+                <defs>
+                  <linearGradient id="sentimentGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stopColor="#f59e0b" />
+                    <stop offset="100%" stopColor="#84cc16" />
+                  </linearGradient>
+                </defs>
+                <text
+                  x="50"
+                  y="50"
+                  textAnchor="middle"
+                  dominantBaseline="middle"
+                  className="text-2xl font-bold fill-foreground"
+                >
+                  {sentimentData.overall}%
+                </text>
+              </svg>
+            </div>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-muted-foreground">Fear & Greed Index</span>
+                <span className="text-sm font-medium">{sentimentData.fearGreedIndex}</span>
+              </div>
+              <div className="h-2 bg-muted rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-gradient-to-r from-red-500 via-yellow-500 to-green-500"
+                  style={{ width: `${sentimentData.fearGreedIndex}%` }}
+                />
+              </div>
+              <div className="text-center text-sm font-medium">{sentimentData.marketMood}</div>
+            </div>
+          </div>
+
+          <div className="space-y-6">
+            <div className="grid grid-cols-3 gap-4">
+              {Object.entries(sentimentData.socialMetrics).map(([platform, data]) => (
+                <motion.div
+                  key={platform}
+                  whileHover={{ scale: 1.05 }}
+                  className="p-4 bg-muted/30 rounded-lg text-center"
+                >
+                  <div className="text-sm text-muted-foreground capitalize mb-1">{platform}</div>
+                  <div className="text-xl font-bold">{data.sentiment}%</div>
+                  <div className="text-xs text-muted-foreground">
+                    {data.volume.toLocaleString()} mentions
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+
+            <div className="space-y-4">
+              <div className="text-sm font-medium">Trending Topics</div>
+              {sentimentData.trends.map((trend, index) => (
+                <motion.div
+                  key={trend.name}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                  className="flex items-center justify-between p-3 bg-muted/30 rounded-lg"
+                >
+                  <span className="font-medium">{trend.name}</span>
+                  <div className="flex items-center space-x-2">
+                    <span className="text-sm">{trend.sentiment}%</span>
+                    <span
+                      className={`text-sm ${
+                        trend.change >= 0 ? "text-green-400" : "text-red-400"
+                      }`}
+                    >
+                      {trend.change >= 0 ? "+" : ""}
+                      {trend.change}%
+                    </span>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  )
+}
+
+// Enhanced Elite Signals Section
+const EliteSignals = () => {
+  const [selectedSignal, setSelectedSignal] = useState<string | null>(null)
+  const [timeframe, setTimeframe] = useState("24h")
+
+  const signals = [
+    {
+      id: "btc-breakout",
+      asset: "BTC",
+      type: "bullish",
+      confidence: 85,
+      entry: 48500,
+      target: 52000,
+      stopLoss: 47000,
+      timeframe: "4h",
+      description: "Strong breakout pattern with increasing volume",
+    },
+    {
+      id: "eth-accumulation",
+      asset: "ETH",
+      type: "bullish",
+      confidence: 78,
+      entry: 2850,
+      target: 3200,
+      stopLoss: 2750,
+      timeframe: "1d",
+      description: "Accumulation phase with institutional buying",
+    },
+    {
+      id: "sol-correction",
+      asset: "SOL",
+      type: "bearish",
+      confidence: 65,
+      entry: 95,
+      target: 85,
+      stopLoss: 100,
+      timeframe: "12h",
+      description: "Potential correction after strong rally",
+    },
+  ]
+
+  return (
+    <Card className="bg-card/50 backdrop-blur-xl border-border shadow-2xl">
+      <CardHeader>
+        <div className="flex items-center justify-between">
+          <CardTitle className="flex items-center text-foreground">
+            <Target className="w-5 h-5 mr-2 text-amber-500" />
+            Elite Signals
+            <Badge className="ml-2 bg-gradient-to-r from-amber-500/20 to-yellow-500/20 text-amber-600 dark:text-amber-400 border-amber-500/30">
+              LIVE
+            </Badge>
+          </CardTitle>
+          <div className="flex space-x-2">
+            {["24h", "7d", "30d"].map((t) => (
+              <Button
+                key={t}
+                variant={timeframe === t ? "default" : "outline"}
+                size="sm"
+                onClick={() => setTimeframe(t)}
+              >
+                {t}
+              </Button>
+            ))}
+          </div>
+        </div>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-4">
+          {signals.map((signal) => (
+            <motion.div
+              key={signal.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              whileHover={{ scale: 1.02 }}
+              className={`p-4 bg-muted/30 rounded-lg cursor-pointer transition-all duration-300 ${
+                selectedSignal === signal.id ? "ring-2 ring-amber-500" : ""
+              }`}
+              onClick={() => setSelectedSignal(selectedSignal === signal.id ? null : signal.id)}
+            >
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-r from-amber-500 to-yellow-500 flex items-center justify-center">
+                    <span className="text-white font-bold">{signal.asset}</span>
+                  </div>
+                  <div>
+                    <div className="font-semibold">{signal.asset}</div>
+                    <div className="text-sm text-muted-foreground">{signal.timeframe}</div>
+                  </div>
+                </div>
+                <Badge
+                  className={
+                    signal.type === "bullish"
+                      ? "bg-green-500/20 text-green-400 border-green-500/30"
+                      : "bg-red-500/20 text-red-400 border-red-500/30"
+                  }
+                >
+                  {signal.type}
+                </Badge>
+              </div>
+
+              <div className="grid grid-cols-3 gap-4 mb-2">
+                <div>
+                  <div className="text-sm text-muted-foreground">Entry</div>
+                  <div className="font-medium">${signal.entry.toLocaleString()}</div>
+                </div>
+                <div>
+                  <div className="text-sm text-muted-foreground">Target</div>
+                  <div className="font-medium">${signal.target.toLocaleString()}</div>
+                </div>
+                <div>
+                  <div className="text-sm text-muted-foreground">Stop Loss</div>
+                  <div className="font-medium">${signal.stopLoss.toLocaleString()}</div>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div className="text-sm text-muted-foreground">{signal.description}</div>
+                <div className="flex items-center space-x-2">
+                  <span className="text-sm font-medium">Confidence</span>
+                  <Badge variant="outline">{signal.confidence}%</Badge>
+                </div>
+              </div>
+
+              <AnimatePresence>
+                {selectedSignal === signal.id && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    exit={{ opacity: 0, height: 0 }}
+                    className="mt-4 pt-4 border-t border-border"
+                  >
+                    <div className="h-32 bg-muted/30 rounded-lg p-4">
+                      <svg className="w-full h-full" viewBox="0 0 100 50" preserveAspectRatio="none">
+                        <path
+                          d="M0 50 L10 45 L20 48 L30 40 L40 42 L50 35 L60 38 L70 32 L80 34 L90 30 L100 25"
+                          fill="none"
+                          stroke={signal.type === "bullish" ? "rgb(34, 197, 94)" : "rgb(239, 68, 68)"}
+                          strokeWidth="2"
+                        />
+                      </svg>
+                    </div>
+                    <div className="flex items-center space-x-4 mt-4">
+                      <Button size="sm" variant="outline">
+                        <Bell className="w-4 h-4 mr-2" />
+                        Set Alert
+                      </Button>
+                      <Button size="sm" variant="outline">
+                        <Share className="w-4 h-4 mr-2" />
+                        Share
+                      </Button>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.div>
+          ))}
+        </div>
+      </CardContent>
+    </Card>
+  )
+}
+
+// Enhanced Global Markets Section
+const GlobalMarkets = () => {
+  const [selectedMarket, setSelectedMarket] = useState<string | null>(null)
+  const [timeframe, setTimeframe] = useState("24h")
+
+  const markets = [
+    {
+      name: "DeFi",
+      value: "$89.2B",
+      change: "+12.4%",
+      positive: true,
+      volume: "$15.7B",
+      dominance: 4.2,
+      topProjects: [
+        { name: "Uniswap", value: "$12.3B", change: "+8.5%" },
+        { name: "Aave", value: "$8.9B", change: "+5.2%" },
+        { name: "Curve", value: "$6.7B", change: "+3.8%" },
+      ],
+    },
+    {
+      name: "NFTs",
+      value: "$15.7B",
+      change: "+8.9%",
+      positive: true,
+      volume: "$2.3B",
+      dominance: 0.8,
+      topProjects: [
+        { name: "Bored Ape", value: "$1.2B", change: "+12.3%" },
+        { name: "CryptoPunks", value: "$0.9B", change: "+7.8%" },
+        { name: "Art Blocks", value: "$0.7B", change: "+5.4%" },
+      ],
+    },
+    {
+      name: "Gaming",
+      value: "$12.1B",
+      change: "-2.1%",
+      positive: false,
+      volume: "$1.8B",
+      dominance: 0.6,
+      topProjects: [
+        { name: "Axie Infinity", value: "$3.2B", change: "-5.6%" },
+        { name: "The Sandbox", value: "$2.8B", change: "+2.3%" },
+        { name: "Decentraland", value: "$1.9B", change: "+1.8%" },
+      ],
+    },
+  ]
+
+  return (
+    <Card className="bg-card/50 backdrop-blur-xl border-border shadow-2xl">
+      <CardHeader>
+        <div className="flex items-center justify-between">
+          <CardTitle className="flex items-center text-foreground">
+            <Globe className="w-5 h-5 mr-2 text-amber-500" />
+            Global Markets
+            <Badge className="ml-2 bg-gradient-to-r from-amber-500/20 to-yellow-500/20 text-amber-600 dark:text-amber-400 border-amber-500/30">
+              LIVE
+            </Badge>
+          </CardTitle>
+          <div className="flex space-x-2">
+            {["24h", "7d", "30d"].map((t) => (
+              <Button
+                key={t}
+                variant={timeframe === t ? "default" : "outline"}
+                size="sm"
+                onClick={() => setTimeframe(t)}
+              >
+                {t}
+              </Button>
+            ))}
+          </div>
+        </div>
+      </CardHeader>
+      <CardContent>
+        <div className="grid grid-cols-2 gap-4 mb-6">
+          <motion.div
+            whileHover={{ scale: 1.05, rotate: 1 }}
+            className="text-center p-4 bg-muted/50 rounded-lg border border-border/30"
+          >
+            <div className="text-2xl font-bold text-green-400">$2.1T</div>
+            <div className="text-sm text-muted-foreground">Total Market Cap</div>
+          </motion.div>
+          <motion.div
+            whileHover={{ scale: 1.05, rotate: -1 }}
+            className="text-center p-4 bg-muted/50 rounded-lg border border-border/30"
+          >
+            <div className="text-2xl font-bold text-foreground">47.2%</div>
+            <div className="text-sm text-muted-foreground">BTC Dominance</div>
+          </motion.div>
+        </div>
+
+        <div className="space-y-4">
+          {markets.map((market) => (
+            <motion.div
+              key={market.name}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              whileHover={{ scale: 1.02 }}
+              className={`p-4 bg-muted/30 rounded-lg cursor-pointer transition-all duration-300 ${
+                selectedMarket === market.name ? "ring-2 ring-amber-500" : ""
+              }`}
+              onClick={() => setSelectedMarket(selectedMarket === market.name ? null : market.name)}
+            >
+              <div className="flex items-center justify-between mb-2">
+                <div className="font-semibold">{market.name}</div>
+                <div className="flex items-center space-x-4">
+                  <div className="text-right">
+                    <div className="font-medium">{market.value}</div>
+                    <div
+                      className={`text-sm ${
+                        market.positive ? "text-green-400" : "text-red-400"
+                      }`}
+                    >
+                      {market.change}
+                    </div>
+                  </div>
+                  <Badge variant="outline">{market.dominance}%</Badge>
+                </div>
+              </div>
+
+              <AnimatePresence>
+                {selectedMarket === market.name && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    exit={{ opacity: 0, height: 0 }}
+                    className="mt-4 pt-4 border-t border-border"
+                  >
+                    <div className="grid grid-cols-2 gap-4 mb-4">
+                      <div>
+                        <div className="text-sm text-muted-foreground mb-1">24h Volume</div>
+                        <div className="text-lg font-medium">{market.volume}</div>
+                      </div>
+                      <div>
+                        <div className="text-sm text-muted-foreground mb-1">Market Dominance</div>
+                        <div className="text-lg font-medium">{market.dominance}%</div>
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <div className="text-sm font-medium">Top Projects</div>
+                      {market.topProjects.map((project) => (
+                        <div
+                          key={project.name}
+                          className="flex items-center justify-between p-2 bg-muted/20 rounded-lg"
+                        >
+                          <span className="text-sm text-muted-foreground">{project.name}</span>
+                          <div className="text-right">
+                            <div className="text-sm font-medium">{project.value}</div>
+                            <div
+                              className={`text-xs ${
+                                project.change.startsWith("+")
+                                  ? "text-green-400"
+                                  : "text-red-400"
+                              }`}
+                            >
+                              {project.change}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+
+                    <div className="h-32 mt-4">
+                      <svg className="w-full h-full" viewBox="0 0 100 50" preserveAspectRatio="none">
+                        <path
+                          d="M0 50 L10 45 L20 48 L30 40 L40 42 L50 35 L60 38 L70 32 L80 34 L90 30 L100 25"
+                          fill="none"
+                          stroke={market.positive ? "rgb(34, 197, 94)" : "rgb(239, 68, 68)"}
+                          strokeWidth="2"
+                        />
+                      </svg>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.div>
+          ))}
+        </div>
+      </CardContent>
+    </Card>
   )
 }
 
@@ -425,84 +926,7 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 text-foreground overflow-hidden relative">
       <FloatingParticles />
-
-      {/* Navigation */}
-      <motion.nav
-        initial={{ y: -100, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
-        className="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-xl border-b border-border"
-      >
-        <div className="container mx-auto px-6 py-4 flex items-center justify-between">
-          <motion.div whileHover={{ scale: 1.05 }} className="flex items-center space-x-2">
-            <motion.div
-              whileHover={{ rotate: 180 }}
-              transition={{ duration: 0.5 }}
-              className="w-8 h-8 bg-gradient-to-r from-amber-500 to-yellow-500 rounded-lg flex items-center justify-center shadow-lg"
-            >
-              <Diamond className="w-5 h-5 text-white" />
-            </motion.div>
-            <span className="text-xl font-bold bg-gradient-to-r from-amber-500 to-yellow-500 bg-clip-text text-transparent">
-              CoinCanvas
-            </span>
-          </motion.div>
-
-          <div className="hidden md:flex items-center space-x-8">
-            {[
-              { name: "Home", href: "/", icon: null },
-              { name: "Analytics", href: "/analytics", icon: BarChart3 },
-              { name: "Portfolio", href: "/portfolio", icon: PieChart },
-              { name: "Markets", href: "#", icon: null },
-              { name: "Elite Features", href: "#", icon: Crown },
-            ].map((item, index) => (
-              <Link key={item.name} href={item.href}>
-                <motion.div
-                  whileHover={{ y: -2, scale: 1.05 }}
-                  transition={{ duration: 0.2 }}
-                  className="text-muted-foreground hover:text-foreground transition-colors relative group flex items-center space-x-1"
-                >
-                  {item.icon && <item.icon className="w-4 h-4" />}
-                  <span>{item.name}</span>
-                  {item.name === "Elite Features" && (
-                    <Crown className="w-3 h-3 text-amber-500 absolute -top-1 -right-3" />
-                  )}
-                  <motion.div
-                    className="absolute -bottom-1 left-0 right-0 h-0.5 bg-gradient-to-r from-amber-500 to-yellow-500"
-                    initial={{ scaleX: 0 }}
-                    whileHover={{ scaleX: 1 }}
-                    transition={{ duration: 0.2 }}
-                  />
-                </motion.div>
-              </Link>
-            ))}
-          </div>
-
-          <div className="flex items-center space-x-4">
-            <ThemeToggle />
-            <Link href="/login">
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Button variant="outline" className="border-border hover:bg-muted">
-                  <LogIn className="w-4 h-4 mr-2" />
-                  Login
-                </Button>
-              </motion.div>
-            </Link>
-            <Link href="/signup">
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Button className="bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-white shadow-lg">
-                  <UserPlus className="w-4 h-4 mr-2" />
-                  Sign Up
-                </Button>
-              </motion.div>
-            </Link>
-          </div>
-        </div>
-      </motion.nav>
-
-      {/* Live Ticker */}
-      <div className="fixed top-16 w-full z-40">
-        <LiveTicker />
-      </div>
+      <LiveTicker />
 
       {/* Hero Section */}
       <section className="relative pt-40 pb-20 px-6">
@@ -678,19 +1102,16 @@ export default function HomePage() {
             <p className="text-muted-foreground text-lg">Professional-grade tools for sophisticated investors</p>
           </motion.div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-            {/* Advanced Chart */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
             <motion.div
               initial={{ y: 50, opacity: 0 }}
               whileInView={{ y: 0, opacity: 1 }}
               transition={{ duration: 0.6, delay: 0.1 }}
               viewport={{ once: true }}
-              className="lg:col-span-2"
             >
-              <AdvancedChart />
+              <PremiumAnalytics />
             </motion.div>
 
-            {/* Market Sentiment */}
             <motion.div
               initial={{ y: 50, opacity: 0 }}
               whileInView={{ y: 0, opacity: 1 }}
@@ -698,6 +1119,26 @@ export default function HomePage() {
               viewport={{ once: true }}
             >
               <MarketSentiment />
+            </motion.div>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            <motion.div
+              initial={{ y: 50, opacity: 0 }}
+              whileInView={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+              viewport={{ once: true }}
+            >
+              <EliteSignals />
+            </motion.div>
+
+            <motion.div
+              initial={{ y: 50, opacity: 0 }}
+              whileInView={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+              viewport={{ once: true }}
+            >
+              <GlobalMarkets />
             </motion.div>
           </div>
 
