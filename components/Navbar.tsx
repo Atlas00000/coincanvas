@@ -71,6 +71,18 @@ export const Navbar = () => {
           {/* Right Side Items */}
           <div className="flex items-center space-x-4">
             <ThemeToggle />
+            <div className="hidden md:flex items-center space-x-2">
+              <Link href="/login">
+                <Button variant="ghost" className="hover:bg-muted">
+                  Sign In
+                </Button>
+              </Link>
+              <Link href="/signup">
+                <Button variant="default" className="bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600">
+                  Sign Up
+                </Button>
+              </Link>
+            </div>
             <Button variant="default" className="hidden md:flex">
               Connect Wallet
             </Button>
@@ -105,9 +117,21 @@ export const Navbar = () => {
                 </motion.div>
               </Link>
             ))}
-            <Button variant="default" className="w-full mt-4">
-              Connect Wallet
-            </Button>
+            <div className="space-y-2 px-4">
+              <Link href="/login" onClick={() => setIsOpen(false)}>
+                <Button variant="ghost" className="w-full hover:bg-muted">
+                  Sign In
+                </Button>
+              </Link>
+              <Link href="/signup" onClick={() => setIsOpen(false)}>
+                <Button variant="default" className="w-full bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600">
+                  Sign Up
+                </Button>
+              </Link>
+              <Button variant="default" className="w-full">
+                Connect Wallet
+              </Button>
+            </div>
           </div>
         </motion.div>
       </div>
